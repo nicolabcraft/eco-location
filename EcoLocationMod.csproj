@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Location est livre en sources (Mods/UserCode/Location) : le serveur Eco les
+    compile au demarrage. Ce projet sert seulement a verifier la compilation
+    contre l'EcoModKit officiel (<serveur>/EcoModKit/ReferenceAssemblies) :
+      dotnet build -p:EcoServerDir="D:/MonServeurEco"
+    (ou ECO_SERVER_DIR, ou un fichier local.props qui definit EcoServerDir).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>EcoLocationMod</AssemblyName>
+    <RootNamespace>EcoLocation</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>$(NoWarn);CS1591;CA1416</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="local.props" Condition="Exists('local.props')" />
+  <PropertyGroup>
+    <EcoServerDir Condition="'$(EcoServerDir)' == ''">$(ECO_SERVER_DIR)</EcoServerDir>
+    <EcoRefs>$(EcoServerDir)/EcoModKit/ReferenceAssemblies</EcoRefs>
+  </PropertyGroup>
+  <Target Name="VerifierEcoModKit" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(EcoRefs)/Eco.Gameplay.dll')"
+           Text="EcoModKit introuvable dans '$(EcoRefs)'. Indiquez la racine du serveur Eco : -p:EcoServerDir=... ou ECO_SERVER_DIR." />
+  </Target>
+
+  <ItemGroup>
+    <!-- Tout sauf Vehicules.cs, qui etend les classes du jeu : seul le serveur peut le compiler. -->
+    <Compile Include="usercode/Location/*.cs" Exclude="usercode/Location/Vehicules.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Eco.Core"><HintPath>$(EcoRefs)/Eco.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.Gameplay"><HintPath>$(EcoRefs)/Eco.Gameplay.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.ModKit"><HintPath>$(EcoRefs)/Eco.ModKit.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.Plugins"><HintPath>$(EcoRefs)/Eco.Plugins.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.Shared"><HintPath>$(EcoRefs)/Eco.Shared.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.Simulation"><HintPath>$(EcoRefs)/Eco.Simulation.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.Stats"><HintPath>$(EcoRefs)/Eco.Stats.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Eco.World"><HintPath>$(EcoRefs)/Eco.World.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+</Project>

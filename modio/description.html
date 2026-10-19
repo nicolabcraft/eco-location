@@ -1,0 +1,45 @@
+<p><strong>Location</strong> ajoute un onglet <em>Louer</em> à tous les véhicules du jeu : bateaux, charrettes, camions, engins.</p>
+
+<h3>Pour le propriétaire</h3>
+<ul>
+<li>Proposer l'objet à la location, fixer le prix par heure (ex. 1 h = 150 crédits), la devise, le compte qui encaisse et la durée maximale (1 h à 7 jours).</li>
+<li>Mettre fin à une location à tout moment.</li>
+<li>Garder l'autorisation du véhicule fermée (pas « Tout le monde ») : seul le locataire reçoit l'accès, le temps de la location.</li>
+</ul>
+
+<h3>Pour le locataire</h3>
+<ul>
+<li>Sans aucun accès au véhicule : <strong>Ctrl + clic droit « Louer »</strong>, choisir une durée (1 h, 2 h, 3 h… jusqu'à 7 j, prix affiché), payer depuis son compte.</li>
+<li>Conduire le véhicule et utiliser sa cale pendant toute la durée ; prolonger ou rendre l'objet plus tôt.</li>
+<li>Avertissements 5 min et 1 min avant la fin ; à l'échéance, l'accès est retiré et le locataire descend du véhicule.</li>
+</ul>
+
+<p><strong>Sécurité</strong> : le locataire reçoit seulement l'accès « consommateur » : il ne peut ni ramasser le véhicule ni modifier ses droits.</p>
+
+<p><strong>Lois</strong> : chaque location déclenche l'action <strong>LouerObjet</strong> (catégorie Finance), avec le locataire, le propriétaire, l'objet, la durée, le montant et la devise. Une loi peut la taxer ou l'interdire (par exemple : pas de location de bateaux, ou taxe de 10 %). Si une loi refuse ou si le paiement échoue, rien ne se passe.</p>
+
+<p>Le temps de location compte en temps de monde : il s'arrête quand le serveur est éteint.</p>
+
+<p><strong>Installation</strong> : abonnez le serveur au mod, ou copiez les fichiers de l'archive dans <code>Mods/UserCode/Location/</code>, puis redémarrez. Ne faites pas les deux : les fichiers seraient compilés deux fois et le serveur ne démarrerait pas.</p>
+
+<p><em>Interface en français.</em></p>
+
+<hr>
+
+<h3>English</h3>
+
+<p><strong>Location</strong> adds a <em>Louer</em> (rent) tab to every vehicle in the game: boats, carts, trucks, machines.</p>
+
+<p><strong>Owners</strong> can offer the object for rent, set a price per hour (e.g. 1 h = 150 credits), the currency, the receiving bank account and a maximum duration (1 h to 7 days), and end a rental at any time. Keep the vehicle's permissions private: only the renter gets access, for the rental's duration.</p>
+
+<p><strong>Renters</strong> need no access: <strong>Ctrl + right-click "Louer"</strong> on the vehicle, pick a duration (price shown) and pay from their own account. They can drive the vehicle and use its storage for the whole rental, extend it, or return it early. They are warned 5 and 1 minutes before the end; when it expires, access is removed and they are dismounted.</p>
+
+<p><strong>Safety</strong>: renters only get <em>consumer</em> access, so they can neither pick up the vehicle nor change its permissions.</p>
+
+<p><strong>Laws</strong>: every rental triggers the <strong>LouerObjet</strong> game action (Finance category) with the renter, owner, object, duration, amount and currency, so laws can tax or forbid it. If a law blocks it or the payment fails, nothing happens.</p>
+
+<p>Rental time counts in world time and stops while the server is off.</p>
+
+<p><strong>Install</strong>: subscribe your server to the mod, or copy the archive's files into <code>Mods/UserCode/Location/</code> and restart. Don't do both, or the files are compiled twice and the server won't start.</p>
+
+<p><em>The in-game interface is in French.</em></p>
