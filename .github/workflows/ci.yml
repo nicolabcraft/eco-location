@@ -6,6 +6,10 @@ on:
     branches: [main, dev]
   pull_request:
 
+# Lecture seule : la CI ne modifie rien dans le depot.
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Compilation et verifications
