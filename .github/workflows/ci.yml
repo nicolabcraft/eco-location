@@ -34,7 +34,7 @@ jobs:
       - name: Fabriquer le paquet de test
         run: node tools/package.mjs "$(cat VERSION)-dev.${GITHUB_RUN_NUMBER}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Location-dev
           path: release/*.zip
