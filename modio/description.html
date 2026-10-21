@@ -1,4 +1,4 @@
-<p><strong>Location</strong> ajoute un onglet <em>Louer</em> à tous les véhicules du jeu : bateaux, charrettes, camions, engins.</p>
+<p><strong>Location</strong> ajoute un onglet <em>Louer</em> à tous les véhicules du jeu : bateaux, charrettes, camions, engins. Disponible en <strong>français</strong> et en <strong>anglais</strong> (langue de chaque joueur), traduisible dans toute langue d’Eco.</p>
 
 <h3>Pour le propriétaire</h3>
 <ul>
@@ -16,30 +16,43 @@
 
 <p><strong>Sécurité</strong> : le locataire reçoit seulement l'accès « consommateur » : il ne peut ni ramasser le véhicule ni modifier ses droits.</p>
 
-<p><strong>Lois</strong> : chaque location déclenche l'action <strong>LouerObjet</strong> (catégorie Finance), avec le locataire, le propriétaire, l'objet, la durée, le montant et la devise. Une loi peut la taxer ou l'interdire (par exemple : pas de location de bateaux, ou taxe de 10 %). Si une loi refuse ou si le paiement échoue, rien ne se passe.</p>
+<p><strong>Lois</strong> : chaque location déclenche l'action <strong>LouerObjet</strong> (« Louer un objet », catégorie Finance), avec le locataire, le propriétaire, l'objet, la durée, le montant et la devise. Une loi peut la taxer ou l'interdire (par exemple : pas de location de bateaux, ou taxe de 10 %). Si une loi refuse ou si le paiement échoue, rien ne se passe.</p>
 
 <p>Le temps de location compte en temps de monde : il s'arrête quand le serveur est éteint.</p>
 
-<p><strong>Installation</strong> : abonnez le serveur au mod, ou copiez les fichiers de l'archive dans <code>Mods/UserCode/Location/</code>, puis redémarrez. Ne faites pas les deux : les fichiers seraient compilés deux fois et le serveur ne démarrerait pas.</p>
+<p><strong>Installation</strong> : décompressez l’archive à la racine du serveur (<code>Mods/UserCode/Location/</code> et <code>Mods/Translations/Location.csv</code>), puis redémarrez. Avec l’abonnement mod.io, copiez <code>Location.csv</code> dans <code>Mods/Translations/</code> pour les traductions. Ne cumulez pas les deux installations : les fichiers seraient compilés deux fois et le serveur ne démarrerait pas.</p>
 
-<p><em>Interface en français.</em></p>
+<h3>Aidez à maintenir le mod</h3>
+<p>Location est développé bénévolement et restera gratuit. Chaque mise à jour d’Eco demande de l’adapter, et il reste plein d’idées à réaliser : <strong>toute aide est la bienvenue</strong>.</p>
+<ul>
+<li><strong>Traduisez-le</strong> dans votre langue : quelques fichiers de texte, sans programmer.</li>
+<li><strong>Signalez un bug</strong> ou proposez une idée, <strong>contribuez au code</strong> : <a href="https://github.com/nicolabcraft/eco-location">github.com/nicolabcraft/eco-location</a>.</li>
+<li><strong>Soutenez le développement</strong> sur <a href="https://github.com/sponsors/nicolabcraft">GitHub Sponsors</a>.</li>
+</ul>
 
 <hr>
 
 <h3>English</h3>
 
-<p><strong>Location</strong> adds a <em>Louer</em> (rent) tab to every vehicle in the game: boats, carts, trucks, machines.</p>
+<p><strong>Location</strong> adds a <em>Vehicle Rental</em> tab to every vehicle in the game: boats, carts, trucks, machines. Available in <strong>English</strong> and <strong>French</strong> (each player's language), translatable into any Eco language.</p>
 
 <p><strong>Owners</strong> can offer the object for rent, set a price per hour (e.g. 1 h = 150 credits), the currency, the receiving bank account and a maximum duration (1 h to 7 days), and end a rental at any time. Keep the vehicle's permissions private: only the renter gets access, for the rental's duration.</p>
 
-<p><strong>Renters</strong> need no access: <strong>Ctrl + right-click "Louer"</strong> on the vehicle, pick a duration (price shown) and pay from their own account. They can drive the vehicle and use its storage for the whole rental, extend it, or return it early. They are warned 5 and 1 minutes before the end; when it expires, access is removed and they are dismounted.</p>
+<p><strong>Renters</strong> need no access: <strong>Ctrl + right-click "Rent"</strong> on the vehicle, pick a duration (price shown) and pay from their own account. They can drive the vehicle and use its storage for the whole rental, extend it, or return it early. They are warned 5 and 1 minutes before the end; when it expires, access is removed and they are dismounted.</p>
 
 <p><strong>Safety</strong>: renters only get <em>consumer</em> access, so they can neither pick up the vehicle nor change its permissions.</p>
 
-<p><strong>Laws</strong>: every rental triggers the <strong>LouerObjet</strong> game action (Finance category) with the renter, owner, object, duration, amount and currency, so laws can tax or forbid it. If a law blocks it or the payment fails, nothing happens.</p>
+<p><strong>Laws</strong>: every rental triggers the <strong>LouerObjet</strong> game action ("Rent Object", Finance category) with the renter, owner, object, duration, amount and currency, so laws can tax or forbid it. If a law blocks it or the payment fails, nothing happens.</p>
 
 <p>Rental time counts in world time and stops while the server is off.</p>
 
-<p><strong>Install</strong>: subscribe your server to the mod, or copy the archive's files into <code>Mods/UserCode/Location/</code> and restart. Don't do both, or the files are compiled twice and the server won't start.</p>
+<p><strong>Install</strong>: unzip the archive at the server root (<code>Mods/UserCode/Location/</code> and <code>Mods/Translations/Location.csv</code>) and restart. With a mod.io subscription, copy <code>Location.csv</code> into <code>Mods/Translations/</code> for translations. Never install both ways at once: the files would be compiled twice and the server would not start.</p>
 
-<p><em>The in-game interface is in French.</em></p>
+<h3>Help maintain the mod</h3>
+<p>Location is developed on a volunteer basis and will stay free. Every Eco update needs some adapting, and there are plenty of ideas left to build: <strong>any help is welcome</strong>.</p>
+<ul>
+<li><strong>Translate it</strong> into your language: a few text files, no programming needed.</li>
+<li><strong>Report a bug</strong>, suggest an idea or <strong>contribute code</strong>: <a href="https://github.com/nicolabcraft/eco-location">github.com/nicolabcraft/eco-location</a>.</li>
+<li><strong>Support development</strong> on <a href="https://github.com/sponsors/nicolabcraft">GitHub Sponsors</a>.</li>
+</ul>
+

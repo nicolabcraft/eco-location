@@ -1,5 +1,7 @@
 <p align="center"><img src="modio/logo.png" alt="Location : louez vos véhicules et bateaux dans Eco" width="760"></p>
 
+<p align="center"><a href="https://github.com/sponsors/nicolabcraft"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=githubsponsors&logoColor=white" alt="Sponsor"></a></p>
+
 # Location : louez vos véhicules dans Eco
 
 Mod serveur pour **Eco** (Strange Loop Games) : les joueurs peuvent louer un
@@ -90,6 +92,14 @@ que seul le serveur compile. Le compilateur du serveur reste plus strict (pas de
 La CI GitHub refait ces vérifications à chaque contribution et publie une
 release à chaque tag `v*`. Voir [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Soutenir le projet
+
+Location est gratuit et le restera. Si le mod vous rend service, vous pouvez
+soutenir son développement sur [GitHub Sponsors](https://github.com/sponsors/nicolabcraft) :
+cela aide à maintenir le mod à jour avec les nouvelles versions d'Eco et à
+ajouter des fonctions. Contribuer du code ou une traduction aide tout autant :
+voir [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Licence
 
 Gratuit et à code ouvert, sous **PolyForm Noncommercial 1.0.0** (`LICENSE.md`) :
@@ -133,6 +143,11 @@ once (the files would be compiled twice). Compatibility: Eco 0.14.2.1.
 **Develop**: `dotnet build -c Release` (no Eco server needed), then
 `node tools/check-vehicles.mjs` and the translation check; see
 [CONTRIBUTING.md](CONTRIBUTING.md#english).
+
+**Support the project**: Location is and will stay free. If it helps your
+server, you can support its development on
+[GitHub Sponsors](https://github.com/sponsors/nicolabcraft); code and translation
+contributions help just as much (see [CONTRIBUTING.md](CONTRIBUTING.md)).
 
 **License**: free and source available under **PolyForm Noncommercial 1.0.0**:
 use it, modify it, share your versions, but never use it commercially. Eco is a

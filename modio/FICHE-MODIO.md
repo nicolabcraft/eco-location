@@ -1,4 +1,4 @@
-# Fiche mod.io : Location 1.0.0
+# Fiche mod.io : Location 1.1.0
 
 À copier dans le formulaire mod.io (jeu : Eco).
 
@@ -9,8 +9,8 @@
 | Nom | Location : rent vehicles & boats |
 | URL (name_id) | `location-rent-vehicles` |
 | Logo | `logo.png` (1280×720, 16:9) |
-| Fichier | `../release/Location-1.0.0.zip` |
-| Version | `1.0.0` |
+| Fichier | `../release/Location-1.1.0.zip` |
+| Version | `1.1.0` |
 | Tags | Server, Economy, Vehicles, Laws (selon les tags proposés par mod.io pour Eco) |
 | Compatibilité | Eco 0.14.2.1 |
 | Licence | **PolyForm Noncommercial 1.0.0** (gratuit, réutilisable, pas d’usage commercial) |
@@ -45,11 +45,11 @@ Interface en français.
 
 ## Description (English)
 
-**Location** adds a *Louer* (rent) tab to every vehicle in the game: boats, carts, trucks, machines.
+**Location** adds a *Vehicle Rental* tab to every vehicle in the game: boats, carts, trucks, machines.
 
 **Owners** can offer the object for rent, set a price per hour (e.g. 1 h = 150 credits), the currency, the receiving bank account and a maximum duration (1 h to 7 days), and end a rental at any time.
 
-**Renters** need no access: **Ctrl + right-click "Louer"** on the vehicle, pick a duration (price shown) and pay from their own account. Owners keep the vehicle's permissions private. They can drive the vehicle and use its storage for the whole rental, extend it, or return it early. They are warned 5 and 1 minutes before the end; when it expires, access is removed and they are dismounted.
+**Renters** need no access: **Ctrl + right-click "Rent"** on the vehicle, pick a duration (price shown) and pay from their own account. Owners keep the vehicle's permissions private. They can drive the vehicle and use its storage for the whole rental, extend it, or return it early. They are warned 5 and 1 minutes before the end; when it expires, access is removed and they are dismounted.
 
 **Safety**: renters only get *consumer* access, so they can neither pick up the vehicle nor change its permissions.
 
