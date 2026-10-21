@@ -24,7 +24,7 @@ namespace EcoLocation
             {
                 var t = new Timer(_ => Verifier(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(5));
                 if (Interlocked.CompareExchange(ref minuterie, t, null) != null) t.Dispose();
-                else Log.WriteLine(Localizer.DoStr("[Location] surveillance des locations demarree"));
+                else Log.WriteLine(Localizer.NotLocalizedStr("[Location] rental watcher started"));
             }
         }
 
@@ -42,7 +42,7 @@ namespace EcoLocation
                 foreach (var c in Composants.Keys)
                 {
                     try { c.Verifier(maintenant); }
-                    catch (Exception e) { Log.WriteErrorLine(Localizer.DoStr("[Location] verification en echec : " + e.Message)); }
+                    catch (Exception e) { Log.WriteErrorLine(Localizer.NotLocalizedStr("[Location] check failed: " + e.Message)); }
                 }
             }
             finally

@@ -3,9 +3,8 @@
   <!--
     Location est livre en sources (Mods/UserCode/Location) : le serveur Eco les
     compile au demarrage. Ce projet sert seulement a verifier la compilation
-    contre l'EcoModKit officiel (<serveur>/EcoModKit/ReferenceAssemblies) :
-      dotnet build -p:EcoServerDir="D:/MonServeurEco"
-    (ou ECO_SERVER_DIR, ou un fichier local.props qui definit EcoServerDir).
+    contre les assemblies officielles d'Eco (paquet NuGet Eco.ReferenceAssemblies,
+    rien a installer) : dotnet build. Autre version d'Eco : -p:EcoVersion=<version>.
   -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -21,15 +20,9 @@
     <NoWarn>$(NoWarn);CS1591;CA1416</NoWarn>
   </PropertyGroup>
 
-  <Import Project="local.props" Condition="Exists('local.props')" />
   <PropertyGroup>
-    <EcoServerDir Condition="'$(EcoServerDir)' == ''">$(ECO_SERVER_DIR)</EcoServerDir>
-    <EcoRefs>$(EcoServerDir)/EcoModKit/ReferenceAssemblies</EcoRefs>
+    <EcoVersion Condition="'$(EcoVersion)' == ''">0.14.2.1-beta-release-1106</EcoVersion>
   </PropertyGroup>
-  <Target Name="VerifierEcoModKit" BeforeTargets="ResolveAssemblyReferences">
-    <Error Condition="!Exists('$(EcoRefs)/Eco.Gameplay.dll')"
-           Text="EcoModKit introuvable dans '$(EcoRefs)'. Indiquez la racine du serveur Eco : -p:EcoServerDir=... ou ECO_SERVER_DIR." />
-  </Target>
 
   <ItemGroup>
     <!-- Tout sauf Vehicules.cs, qui etend les classes du jeu : seul le serveur peut le compiler. -->
@@ -37,14 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Eco.Core"><HintPath>$(EcoRefs)/Eco.Core.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.Gameplay"><HintPath>$(EcoRefs)/Eco.Gameplay.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.ModKit"><HintPath>$(EcoRefs)/Eco.ModKit.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.Plugins"><HintPath>$(EcoRefs)/Eco.Plugins.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.Shared"><HintPath>$(EcoRefs)/Eco.Shared.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.Simulation"><HintPath>$(EcoRefs)/Eco.Simulation.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.Stats"><HintPath>$(EcoRefs)/Eco.Stats.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Eco.World"><HintPath>$(EcoRefs)/Eco.World.dll</HintPath><Private>false</Private></Reference>
+    <PackageReference Include="Eco.ReferenceAssemblies" Version="$(EcoVersion)" PrivateAssets="all" ExcludeAssets="runtime" />
   </ItemGroup>
 
 </Project>

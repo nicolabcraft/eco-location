@@ -1,0 +1,31 @@
+name: Bug
+description: Quelque chose ne marche pas / Something doesn't work
+labels: [bug]
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Version d'Eco et du mod / Eco and mod versions
+      placeholder: Eco 0.14.2.1, mod 1.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: etapes
+    attributes:
+      label: Ce que vous avez fait / Steps
+      placeholder: "1. ...\n2. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Ce qui s'est passé, ce que vous attendiez / What happened, what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: journaux
+    attributes:
+      label: Journaux / Logs
+      description: Extrait du journal du serveur (Logs/) ou capture d'écran / Server log excerpt or screenshot
+      render: text

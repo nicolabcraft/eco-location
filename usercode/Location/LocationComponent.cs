@@ -41,12 +41,14 @@ namespace EcoLocation
     /// serveur est eteint, le locataire ne perd donc rien pendant une coupure.
     /// </summary>
     [Serialized]
-    // « Location » serait traduit par Eco en « Emplacement » : l'onglet s'appelle donc « Louer ».
-    [CreateComponentTabLoc("Louer", true)]
+    // Textes sources en anglais, traduits par Eco (Mods/Translations/Location.csv). Nom
+    // d'onglet propre au mod : « Location » ou « Rent » existent deja dans les
+    // traductions du jeu (« Emplacement », « Loyer »).
+    [CreateComponentTabLoc("Vehicle Rental", true)]
     // Priorité basse : l'onglet passe après les autres (Stockage, Texte, Pièces...).
     [Priority(PriorityAttribute.VeryLow)]
     [HasIcon("HourglassItem")]
-    [LocDescription("Permet de louer cet objet à d'autres citoyens, pour une durée et un prix par heure.")]
+    [LocDescription("Lets other citizens rent this object for a chosen duration, at a price per hour.")]
     public class LocationComponent : WorldObjectComponent, IHasEnvVars
     {
         /// <summary>Durees proposees au locataire, en heures, limitees par la duree maximale.</summary>
@@ -90,7 +92,7 @@ namespace EcoLocation
 
         [SyncToView, Autogen, Sort(10), UITypeName("GeneralHeader"), VisibilityParam(nameof(ShowLouer))]
         public string EnteteLouer(Player player) =>
-            player?.User != null && player.User == this.Locataire ? Localizer.DoStr("Prolonger la location") : Localizer.DoStr("Choisir une durée");
+            player?.User != null && player.User == this.Locataire ? Localizer.DoStr("Extend the rental") : Localizer.DoStr("Choose a duration");
 
         // Grille de boutons : un clic appelle SelectDurees(player, index).
         [SyncToView, Autogen, Sort(11), UIListTypeName("ButtonGrid"), VisibilityParam(nameof(ShowLouer))]
@@ -99,7 +101,7 @@ namespace EcoLocation
         [SyncToView] public IEnumerable<string> DureesIcons => this.DureesDisponibles().Select(_ => "HourglassItem").ToList();
 
         [RPC(AccessType.None)]
-        [UnauthenticatedRpcJustification("Louer est public par nature : le client n'a aucun droit sur l'objet. Tout est vérifié dans la méthode (location ouverte, objet libre, durée autorisée) puis par le transfert d'argent, depuis le propre compte du client, et par les lois.")]
+        [UnauthenticatedRpcJustification("Renting is public by nature: the customer holds no access on the object. Everything is checked in the method (rental open, object free, allowed duration), then by the money transfer from the customer's own account, and by the laws.")]
         public void SelectDurees(Player player, int index)
         {
             var durees = this.DureesDisponibles().ToList();
@@ -108,15 +110,15 @@ namespace EcoLocation
         }
 
         [Autogen, RPC(AccessType.None), Sort(12), UITypeName("BigButton"), DynamicTitle(nameof(TitreRendre)), VisibilityParam(nameof(ShowRendre))]
-        [Description("Termine votre location tout de suite. Le temps restant n'est pas remboursé.")]
-        [UnauthenticatedRpcJustification("Seul le locataire en cours peut rendre l'objet : vérifié dans la méthode.")]
+        [Description("Ends your rental right away. The remaining time is not refunded.")]
+        [UnauthenticatedRpcJustification("Only the current renter can return the object: checked in the method.")]
         public void Rendre(Player player)
         {
             if (player?.User == null || player.User != this.Locataire) return;
-            this.Terminer(Localizer.Do($"Vous avez rendu {this.Parent.MarkedUpName}."), notifierProprietaires: true);
+            this.Terminer(u => u.MsgLoc($"You returned {this.Parent.MarkedUpName}."), notifierProprietaires: true);
         }
 
-        [SyncToView] public string TitreRendre => Localizer.DoStr("Rendre maintenant");
+        [SyncToView] public string TitreRendre => Localizer.DoStr("Return now");
 
         // --- Location sans aucun droit sur l'objet --------------------------------
         //
@@ -130,7 +132,7 @@ namespace EcoLocation
         /// <summary>Prix affiche dans l'interaction.</summary>
         [EnvVar] public string PrixLocation => this.devise == null ? string.Empty : $"{Montant(this.prixParHeure)} {this.devise.Name} / h";
 
-        [Interaction(InteractionTrigger.RightClick, "Louer (%PrixLocation%)", InteractionModifier.Ctrl, requiredEnvVars: new[] { nameof(LouerPossible) }, priority: 10, authRequired: AccessType.None)]
+        [Interaction(InteractionTrigger.RightClick, "Rent (%PrixLocation%)", InteractionModifier.Ctrl, requiredEnvVars: new[] { nameof(LouerPossible) }, priority: 10, authRequired: AccessType.None)]
         public void LouerInteraction(Player player, InteractionTriggerInfo trigger, InteractionTarget target) => _ = this.ChoisirDureeAsync(player);
 
         private async Task ChoisirDureeAsync(Player player)
@@ -139,53 +141,53 @@ namespace EcoLocation
             if (user == null) return;
             try
             {
-                if (this.EstProprio(user)) { user.MsgLocStr("Vous avez déjà accès à cet objet."); return; }
+                if (this.EstProprio(user)) { user.MsgLocStr("You already have access to this object."); return; }
                 var durees = this.DureesDisponibles().ToList();
                 var options = durees.Select(h => $"{TexteDuree(h)}  ·  {Montant(h * this.prixParHeure)} {this.devise?.Name}").ToList();
-                var choix = await player.OptionBox(Localizer.Do($"Louer {this.Parent.MarkedUpName} : choisissez une durée."), options);
+                var choix = await player.OptionBox(Localizer.Do($"Rent {this.Parent.MarkedUpName}: choose a duration."), options);
                 if (choix < 0 || choix >= durees.Count) return;
                 await this.LouerAsync(player, durees[choix], confirmer: false);
             }
             catch (Exception e)
             {
-                Log.WriteErrorLine(Localizer.DoStr("[Location] choix de durée en échec : " + e));
+                Log.WriteErrorLine(Localizer.NotLocalizedStr("[Location] duration choice failed: " + e));
             }
         }
 
         // --- Proprietaire ---------------------------------------------------------
 
         [SyncToView, Autogen, Sort(20), UITypeName("GeneralHeader"), VisibilityParam(nameof(ShowProprio))]
-        public string EnteteProprio => Localizer.DoStr("Réglages du propriétaire");
+        public string EnteteProprio => Localizer.DoStr("Owner settings");
 
-        [Eco(AccessType.FullAccess), Serialized, Sort(21), LocDisplayName("Proposer à la location"), VisibilityParam(nameof(ShowProprio))]
+        [Eco(AccessType.FullAccess), Serialized, Sort(21), LocDisplayName("Offer for rent"), VisibilityParam(nameof(ShowProprio))]
         public bool Proposer
         {
             get => this.proposer;
             set { this.proposer = value; this.Rafraichir(); }
         }
 
-        [Eco(AccessType.FullAccess), Serialized, Sort(22), LocDisplayName("Prix par heure"), VisibilityParam(nameof(ShowProprio))]
+        [Eco(AccessType.FullAccess), Serialized, Sort(22), LocDisplayName("Price per hour"), VisibilityParam(nameof(ShowProprio))]
         public float PrixParHeure
         {
             get => this.prixParHeure;
             set { this.prixParHeure = Math.Max(0, value); this.Rafraichir(); }
         }
 
-        [Eco(AccessType.FullAccess), Serialized, AllowNullInView, Sort(23), LocDisplayName("Devise"), VisibilityParam(nameof(ShowProprio))]
+        [Eco(AccessType.FullAccess), Serialized, AllowNullInView, Sort(23), LocDisplayName("Rental currency"), VisibilityParam(nameof(ShowProprio))]
         public Currency Devise
         {
             get => this.devise;
             set { this.devise = value; this.Rafraichir(); }
         }
 
-        [Eco(AccessType.FullAccess), Serialized, AllowNullInView, Sort(24), LocDisplayName("Compte qui encaisse"), VisibilityParam(nameof(ShowProprio))]
+        [Eco(AccessType.FullAccess), Serialized, AllowNullInView, Sort(24), LocDisplayName("Receiving account"), VisibilityParam(nameof(ShowProprio))]
         public BankAccount Compte
         {
             get => this.compte;
             set { this.compte = value; this.Rafraichir(); }
         }
 
-        [Eco(AccessType.FullAccess), Serialized, Sort(25), LocDisplayName("Durée maximale (heures)"), VisibilityParam(nameof(ShowProprio))]
+        [Eco(AccessType.FullAccess), Serialized, Sort(25), LocDisplayName("Maximum duration (hours)"), VisibilityParam(nameof(ShowProprio))]
         public int DureeMax
         {
             get => this.dureeMax;
@@ -193,15 +195,15 @@ namespace EcoLocation
         }
 
         [Autogen, RPC(AccessType.FullAccess), Sort(26), UITypeName("BigButton"), DynamicTitle(nameof(TitreMettreFin)), VisibilityParam(nameof(ShowMettreFin))]
-        [Description("Reprend l'objet tout de suite. Le locataire n'est pas remboursé automatiquement.")]
+        [Description("Takes the object back right away. The renter is not refunded automatically.")]
         public void MettreFin(Player player)
         {
             if (this.Locataire == null) return;
-            this.Terminer(Localizer.Do($"Le propriétaire a mis fin à votre location de {this.Parent.MarkedUpName}."), notifierProprietaires: false);
-            player?.User?.MsgLocStr("Location terminée.");
+            this.Terminer(u => u.MsgLoc($"The owner ended your rental of {this.Parent.MarkedUpName}."), notifierProprietaires: false);
+            player?.User?.MsgLocStr("Rental ended.");
         }
 
-        [SyncToView] public string TitreMettreFin => Localizer.DoStr("Mettre fin à la location");
+        [SyncToView] public string TitreMettreFin => Localizer.DoStr("End the rental");
 
         // --- Visibilite -----------------------------------------------------------
 
@@ -252,44 +254,49 @@ namespace EcoLocation
             try
             {
                 var erreur = this.VerifierDemande(user, heures, out var fin);
-                if (erreur != null) { user.MsgLocStr(erreur); return; }
+                if (erreur != null) { user.Msg(erreur.Value); return; }
 
                 var prix = heures * this.prixParHeure;
-                var verbe = user == this.Locataire ? "Prolonger la location de" : "Louer";
                 // Depuis la fenetre de choix, la duree et le prix viennent d'etre lus : pas de seconde question.
-                if (confirmer && !await player.ConfirmBoxLoc($"{verbe} {this.Parent.MarkedUpName} pendant {TexteDuree(heures)} pour {Montant(prix)} {this.devise.Name} ?")) return;
+                if (confirmer)
+                {
+                    var question = user == this.Locataire
+                        ? Localizer.Do($"Extend the rental of {this.Parent.MarkedUpName} by {TexteDuree(heures)} for {Montant(prix)} {this.devise.Name}?")
+                        : Localizer.Do($"Rent {this.Parent.MarkedUpName} for {TexteDuree(heures)} for {Montant(prix)} {this.devise.Name}?");
+                    if (!await player.ConfirmBox(question)) return;
+                }
 
                 lock (this.verrou)
                 {
                     // L'etat a pu changer pendant la confirmation.
                     erreur = this.VerifierDemande(user, heures, out fin);
-                    if (erreur != null) { user.MsgLocStr(erreur); return; }
+                    if (erreur != null) { user.Msg(erreur.Value); return; }
                     this.Payer(user, heures, prix, fin);
                 }
             }
             catch (Exception e)
             {
-                Log.WriteErrorLine(Localizer.DoStr("[Location] location en échec : " + e));
-                user.MsgLocStr("La location a échoué (erreur du serveur).");
+                Log.WriteErrorLine(Localizer.NotLocalizedStr("[Location] rental failed: " + e));
+                user.MsgLocStr("The rental failed (server error).");
             }
         }
 
-        /// <summary>Null si la demande est recevable ; sinon le motif du refus.</summary>
-        private string VerifierDemande(User user, int heures, out double fin)
+        /// <summary>Null si la demande est recevable ; sinon le motif du refus, deja traduit.</summary>
+        private LocString? VerifierDemande(User user, int heures, out double fin)
         {
             fin = 0;
-            if (!this.Ouverte) return "Cet objet n'est pas proposé à la location.";
-            if (this.EstProprio(user)) return "Vous avez déjà accès à cet objet.";
-            if (this.Locataire != null && this.Locataire != user) return $"Cet objet est déjà loué par {this.Locataire.Name}.";
-            if (!this.DureesDisponibles().Contains(heures)) return "Cette durée n'est pas proposée.";
-            if (user.BankAccount == null) return "Vous n'avez pas de compte personnel.";
+            if (!this.Ouverte) return Localizer.DoStr("This object is not offered for rent.");
+            if (this.EstProprio(user)) return Localizer.DoStr("You already have access to this object.");
+            if (this.Locataire != null && this.Locataire != user) return Localizer.Do($"This object is already rented by {this.Locataire.Name}.");
+            if (!this.DureesDisponibles().Contains(heures)) return Localizer.DoStr("This duration is not offered.");
+            if (user.BankAccount == null) return Localizer.DoStr("You have no personal bank account.");
 
             var maintenant = WorldTime.Seconds;
             var depart = this.Locataire == user ? Math.Max(this.FinMonde, maintenant) : maintenant;
             fin = depart + heures * 3600.0;
             if (fin - maintenant > this.dureeMax * 3600.0 + 1)
             {
-                return $"Durée maximale : {TexteDuree(this.dureeMax)} à la fois. Il vous reste {TexteReste(this.FinMonde - maintenant)}.";
+                return Localizer.Do($"Maximum duration: {TexteDuree(this.dureeMax)} at a time. You still have {TexteReste(this.FinMonde - maintenant)}.");
             }
             return null;
         }
@@ -326,7 +333,7 @@ namespace EcoLocation
                     TargetAccount = this.compte,
                     Sender = user,
                     TransferType = TransferType.Rent,
-                    TransferDescription = Localizer.Do($"Location de {this.Parent.MarkedUpName} ({TexteDuree(heures)})"),
+                    TransferDescription = Localizer.Do($"Rental of {this.Parent.MarkedUpName} ({TexteDuree(heures)})"),
                     TaxPayer = user,
                     TaxSettlementScopes = action.SettlementScopes,
                 });
@@ -358,10 +365,12 @@ namespace EcoLocation
             this.Rafraichir();
 
             var reste = TexteReste(fin - WorldTime.Seconds);
-            user.MsgLocStr(nouvelle
-                ? $"Location confirmée : {this.Parent.MarkedUpName} est à vous pour {reste}."
-                : $"Location prolongée : il vous reste {reste}.");
-            this.NotifierProprietaires($"{user.Name} {(nouvelle ? "loue" : "prolonge la location de")} {this.Parent.MarkedUpName} ({TexteDuree(heures)}).");
+            if (nouvelle) user.MsgLoc($"Rental confirmed: {this.Parent.MarkedUpName} is yours for {reste}.");
+            else user.MsgLoc($"Rental extended: you have {reste} left.");
+            var objet = this.Parent.MarkedUpName;
+            var duree = TexteDuree(heures);
+            if (nouvelle) this.NotifierProprietaires(u => u.MsgLoc($"{user.Name} rents {objet} ({duree})."));
+            else this.NotifierProprietaires(u => u.MsgLoc($"{user.Name} extends the rental of {objet} ({duree})."));
         }
 
         /// <summary>Appele toutes les 5 secondes par LocationRegistre : avertissements et echeance.</summary>
@@ -376,7 +385,7 @@ namespace EcoLocation
                 lock (this.verrou)
                 {
                     if (this.Locataire == null || this.FinMonde > WorldTime.Seconds) return;
-                    this.Terminer(Localizer.Do($"Votre location de {this.Parent.MarkedUpName} est terminée."), notifierProprietaires: true);
+                    this.Terminer(u => u.MsgLoc($"Your rental of {this.Parent.MarkedUpName} has ended."), notifierProprietaires: true);
                 }
                 return;
             }
@@ -384,12 +393,12 @@ namespace EcoLocation
             if (reste <= 60 && !this.averti1)
             {
                 this.averti1 = this.averti5 = true;
-                locataire.MsgLocStr($"Votre location de {this.Parent.MarkedUpName} se termine dans moins d'une minute.");
+                locataire.MsgLoc($"Your rental of {this.Parent.MarkedUpName} ends in less than a minute.");
             }
             else if (reste <= 300 && !this.averti5)
             {
                 this.averti5 = true;
-                locataire.MsgLocStr($"Votre location de {this.Parent.MarkedUpName} se termine dans 5 minutes.");
+                locataire.MsgLoc($"Your rental of {this.Parent.MarkedUpName} ends in 5 minutes.");
             }
 
             // Le temps restant affiche dans l'onglet suit la minute.
@@ -401,7 +410,8 @@ namespace EcoLocation
             }
         }
 
-        private void Terminer(LocString messageLocataire, bool notifierProprietaires)
+        /// <summary>Fin de location ; le message au locataire est envoye dans sa langue.</summary>
+        private void Terminer(Action<User> prevenirLocataire, bool notifierProprietaires)
         {
             var locataire = this.Locataire;
             if (locataire == null) return;
@@ -420,15 +430,17 @@ namespace EcoLocation
             this.AccesAjoute = false;
             this.Rafraichir();
 
-            locataire.MsgLoc($"{messageLocataire}");
-            if (notifierProprietaires) this.NotifierProprietaires($"La location de {this.Parent.MarkedUpName} par {locataire.Name} est terminée.");
+            prevenirLocataire(locataire);
+            var objet = this.Parent.MarkedUpName;
+            if (notifierProprietaires) this.NotifierProprietaires(u => u.MsgLoc($"The rental of {objet} by {locataire.Name} has ended."));
         }
 
-        private void NotifierProprietaires(string message)
+        /// <summary>Previent les proprietaires connectes, chacun dans sa langue.</summary>
+        private void NotifierProprietaires(Action<User> prevenir)
         {
             foreach (var u in UserManager.Users.Where(u => u.IsOnline))
             {
-                if (u != this.Locataire && this.EstProprio(u)) u.MsgLocStr(message);
+                if (u != this.Locataire && this.EstProprio(u)) prevenir(u);
             }
         }
 
@@ -452,31 +464,32 @@ namespace EcoLocation
             if (this.Locataire != null)
             {
                 return viewer != null && viewer == this.Locataire
-                    ? $"Vous louez cet objet. Temps restant : {TexteReste(reste)}."
-                    : $"Loué par {this.Locataire.Name}. Libre dans {TexteReste(reste)}.";
+                    ? Localizer.Do($"You are renting this object. Time left: {TexteReste(reste)}.")
+                    : Localizer.Do($"Rented by {this.Locataire.Name}. Free in {TexteReste(reste)}.");
             }
-            if (!this.proposer) return "Cet objet n'est pas proposé à la location.";
+            if (!this.proposer) return Localizer.DoStr("This object is not offered for rent.");
             if (this.devise == null || this.compte == null)
             {
                 return this.EstProprio(viewer)
-                    ? "Choisissez une devise et un compte pour ouvrir la location."
-                    : "La location n'est pas encore ouverte.";
+                    ? Localizer.DoStr("Choose a currency and an account to open the rental.")
+                    : Localizer.DoStr("Renting is not open yet.");
             }
-            return $"Libre. Prix : {Montant(this.prixParHeure)} {this.devise.Name} par heure, jusqu'à {TexteDuree(this.dureeMax)}.";
+            return Localizer.Do($"Available. Price: {Montant(this.prixParHeure)} {this.devise.Name} per hour, up to {TexteDuree(this.dureeMax)}.");
         }
 
+        // Unites traduites aussi (« d » devient « j » en francais).
         internal static string TexteDuree(int heures) =>
-            heures >= 24 && heures % 24 == 0 ? $"{heures / 24} j" : $"{heures} h";
+            heures >= 24 && heures % 24 == 0 ? Localizer.Do($"{heures / 24} d") : Localizer.Do($"{heures} h");
 
         internal static string TexteReste(double secondes)
         {
-            if (secondes <= 0) return "0 min";
+            if (secondes <= 0) return Localizer.Do($"{0} min");
             var t = TimeSpan.FromSeconds(Math.Ceiling(secondes));
-            if (t.TotalHours >= 1) return $"{(int)t.TotalHours} h {t.Minutes:00} min";
-            if (t.TotalMinutes >= 1) return $"{(int)Math.Ceiling(t.TotalMinutes)} min";
-            return $"{t.Seconds} s";
+            if (t.TotalHours >= 1) return Localizer.Do($"{(int)t.TotalHours} h {t.Minutes:00} min");
+            if (t.TotalMinutes >= 1) return Localizer.Do($"{(int)Math.Ceiling(t.TotalMinutes)} min");
+            return Localizer.Do($"{t.Seconds} s");
         }
 
-        private static string Montant(float v) => v.ToString("0.##", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"));
+        private static string Montant(float v) => v.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
     }
 }

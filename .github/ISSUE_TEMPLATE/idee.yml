@@ -1,0 +1,15 @@
+name: Idée / Feature
+description: Proposer une amélioration / Suggest an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: besoin
+    attributes:
+      label: Le besoin / The need
+      description: Quel problème cela résoudrait ? / What problem would it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: idee
+    attributes:
+      label: L'idée / The idea

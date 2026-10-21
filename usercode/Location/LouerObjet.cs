@@ -14,36 +14,37 @@ namespace EcoLocation
     /// loyer, avec les memes conditions (qui loue, a qui, quoi, combien, ou).
     /// </summary>
     [Eco(true, Serialized = false), LocCategory("Finance")]
-    [LocDescription("Un citoyen loue un objet (véhicule, bateau...) à son propriétaire pour une durée.")]
-    [ChangeParentConfigLoc("Citizen", "Locataire")]
+    [LocDisplayName("Rent Object"), LocDescription("A citizen rents an object (vehicle, boat...) from its owner for a duration.")]
+    // Noms de proprietes inchanges depuis la 1.0.0 : les lois existantes y font reference.
+    [ChangeParentConfigLoc("Citizen", "Renter")]
     public class LouerObjet : InteractAction, ICurrencyGameAction
     {
         // Le locataire n'a, par definition, aucun droit sur l'objet : l'action ne
         // doit pas etre refusee par le controle d'acces ordinaire.
         public LouerObjet() => this.AccessNeeded = AccessType.None;
 
-        [Eco, LocDescription("Le propriétaire de l'objet loué.")]
+        [Eco, LocDisplayName("Owner"), LocDescription("The owner of the rented object.")]
         public IAlias Proprietaire { get; set; }
 
-        [Eco, LocDescription("Le type d'objet loué.")]
+        [Eco, LocDisplayName("Rented object"), LocDescription("The type of object rented.")]
         public Item ObjetLoue { get; set; }
 
-        [Eco, LocDescription("Durée louée, en heures.")]
+        [Eco, LocDisplayName("Hours"), LocDescription("Rented duration, in hours.")]
         public float Heures { get; set; }
 
-        [Eco, LocDescription("Prix demandé pour une heure.")]
+        [Eco, LocDisplayName("Price per hour"), LocDescription("Price asked for one hour.")]
         public float PrixParHeure { get; set; }
 
-        [Eco, LocDescription("Devise utilisée.")]
+        [Eco, LocDescription("Currency used.")]
         public Currency Currency { get; set; }
 
-        [Eco, LocDescription("Montant payé pour la location.")]
+        [Eco, LocDescription("Amount paid for the rental.")]
         public float CurrencyAmount { get; set; }
 
-        [Eco, LocDescription("Le compte du locataire.")]
+        [Eco, LocDescription("The renter's bank account.")]
         public BankAccount SourceBankAccount { get; set; }
 
-        [Eco, LocDescription("Le compte qui reçoit le loyer.")]
+        [Eco, LocDescription("The bank account receiving the rent.")]
         public BankAccount TargetBankAccount { get; set; }
     }
 }

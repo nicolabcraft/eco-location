@@ -1,0 +1,18 @@
+name: Traduction / Translation
+description: Proposer ou corriger une traduction / Add or fix a translation
+labels: [translation]
+body:
+  - type: input
+    id: langue
+    attributes:
+      label: Langue / Language
+      placeholder: Deutsch, Español, Italiano...
+    validations:
+      required: true
+  - type: textarea
+    id: textes
+    attributes:
+      label: Textes / Texts
+      description: Fichier joint ou textes traduits (voir CONTRIBUTING.md) / Attach your file or paste the translated texts (see CONTRIBUTING.md)
+    validations:
+      required: true

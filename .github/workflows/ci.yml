@@ -1,0 +1,40 @@
+# Verifie chaque contribution : compilation, vehicules, traductions, paquet.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Compilation et verifications
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Assemblies d'Eco : paquet NuGet officiel Eco.ReferenceAssemblies.
+      - name: Compiler le mod
+        run: dotnet build -c Release
+
+      - name: Verifier les vehicules (Vehicules.cs)
+        run: node tools/check-vehicles.mjs
+
+      - name: Verifier les traductions (translations/Location.csv)
+        run: node tools/eco-translations.mjs check translations/Location.csv usercode/Location
+
+      - name: Fabriquer le paquet de test
+        run: node tools/package.mjs "$(cat VERSION)-dev.${GITHUB_RUN_NUMBER}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Location-dev
+          path: release/*.zip
